@@ -1,0 +1,41 @@
+{# Boutons de vote pour une review #}
+<div class="vote-container" data-review-id="{{ review.id }}">
+    <div class="vote-buttons d-flex align-items-center gap-2">
+        {# Bouton Like (UpVote) #}
+        <button class="btn btn-sm btn-outline-success vote-btn"
+                data-vote-type="up"
+                data-review-id="{{ review.id }}"
+                title="J'aime ce commentaire">
+            <i class="fas fa-thumbs-up"></i>
+            <span class="vote-count up-count">{{ review.upVote }}</span>
+        </button>
+
+        {# Score total #}
+        <span class="vote-score badge
+            {% if review.totalScore > 0 %}
+                bg-success
+            {% elseif review.totalScore < 0 %}
+                bg-danger
+            {% else %}
+                bg-secondary
+            {% endif %}">
+            {{ review.totalScore }}
+        </span>
+
+        {# Bouton Dislike (DownVote) #}
+        <button class="btn btn-sm btn-outline-danger vote-btn"
+                data-vote-type="down"
+                data-review-id="{{ review.id }}"
+                title="Je n'aime pas ce commentaire">
+            <i class="fas fa-thumbs-down"></i>
+            <span class="vote-count down-count">{{ review.downVote }}</span>
+        </button>
+    </div>
+
+    {# Pourcentage de votes positifs (optionnel) #}
+    {% if review.upVote + review.downVote > 0 %}
+        <small class="text-muted d-block mt-1">
+            {{ review.positiveVotePercentage }}% de votes positifs
+        </small>
+    {% endif %}
+</div>

@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block title %}Modifier un jeu !{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+  <div class="mb-4">
+            <a href="{{ path('app_home') }}" class="default-link">Accueil</a>
+        </div>
+
+    <div class="row">
+    {{ form_start(formAdminEditGame) }}
+        {{ form_end(formAdminEditGame) }}
+    </div>
+</div>
+
+{% endblock %}

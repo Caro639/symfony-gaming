@@ -1,0 +1,70 @@
+{# nav #}
+<nav class="navbar navbar-expand-lg border border-opacity-25 rounded" style="background-color: #272727;">
+	<div class="container-fluid">
+		<a class="navbar-brand mx-auto ps-5 default-link" href="{{ path('app_home') }}">SteamIsh V3</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-center" id="navbarNavDropdown">
+			<ul
+				class="navbar-nav mx-auto">
+				{# <li>
+				          <a href="{{ path('app_home') }}" class="nav-link text-light">Accueil</a>
+				        </li> #}
+				<li class="nav-item">
+					<a class="nav-link default-link" href="{{ path('app_register') }}">Inscription</a>
+				</li>
+				<li>
+					<a class="nav-link default-link" href="{{ path('app_login') }}">Connexion</a>
+				</li>
+				{% if app.user %}
+					<li class="nav-item">
+						<a class="nav-link default-link" href="{{ path('app_logout') }}">Deconnexion</a>
+					</li>
+					{# {% else %} #}
+					<li class="nav-item">
+						<a class="nav-link default-link" href="#">Mon profil</a>
+					</li>
+				{% endif %}
+				{% if is_granted('ROLE_ADMIN') %}
+					<li class="nav-item dropdown">
+						<a class="nav-link dropdown-toggle default-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+							Administration
+						</a>
+						<ul class="dropdown-menu opacity-100 text-center" style="background-color: #272727;"></li>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link default-link" href="{{ path('app_category') }}">Ajouter une catégorie</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link default-link" href="{{ path('app_publisher') }}">Ajouter un éditeur</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link default-link" href="{{ path('app_admin_game') }}">Interface des jeux</a>
+					</li>
+				</ul>
+			{% endif %}
+			<li class="nav-item dropdown">
+				<a class="nav-link dropdown-toggle default-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+					Catégories
+				</a>
+				<ul class="dropdown-menu opacity-100 text-center" style="background-color: #272727;">
+					{% set categories = get_last_category() %}
+					{% for category in categories %}
+						<li>
+							<a href="{{ path('app_game_category', { slug: category.slug }) }}" class="default-link text-center">
+								{{ category.name }}
+							</a>
+						</li>
+					{% endfor %}
+				</ul>
+			</li>
+		</ul>
+
+		{# Formulaire de recherche aligné à droite #}
+		<form class="d-flex ms-auto" role="search">
+			<input class="form-control me-2" type="search" placeholder="Rechercher..." aria-label="Search"/>
+			<button class="button-gradient" type="submit">Rechercher</button>
+		</form>
+	</div>
+</div></nav>

@@ -1,0 +1,153 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Jeu {{ game.name }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {# Titre de la page #}
+        <h1 class="text-center m-4">Jeux {{ game.name }}</h1>
+
+    <div class="m-4">
+        <a href="{{ path('app_home') }}" class="default-link">Accueil</a>
+    </div>
+
+    <div class="row align-items-center justify-content-center">
+        <!-- Carte image à gauche -->
+        <div class="col-12 col-md-5 col-lg-5 mb-3">
+            <div class="container-img" style="min-height: 385px; min-width: 100%;">
+                <img src="{{ game.thumbnailCover }}"
+                    alt="{{ game.name }}">
+            </div>
+        </div>
+        <!-- Carte description à droite -->
+        <div class="col-12 col-md-5 col-lg-5 mb-3">
+            <div class="card p-4 h-100 bg-dark opacity-50 text-light" style="min-height: 385px;">
+                <h2 class="mt-5">{{ game.name }}</h2>
+                <p>{{ game.description|short }}</p>
+                <p>Publié le {{ game.publishedAt|date('d/m/Y') }}</p>
+                <h4 class="m-2">{{ game.price|euro }}</h4>
+                <button class="button-gradient">
+                <a href="#" class="text-decoration-none text-light">Ajouter au panier</a>
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <h3 class="text-center m-4">A propos</h3>
+    <div class="row align-items-start justify-content-center">
+        {# Informations du jeu à gauche #}
+        <div class="col-12 col-md-5 col-lg-5 mb-3">
+            <div class="card p-4 h-100 bg-dark opacity-50 text-light">
+                <p><strong>Développeur :</strong></p>
+
+                <p><strong>Éditeur :
+                {% if findPublisherByGame is empty %}
+                    <span>Aucun éditeur disponible</span>
+                {% else %}
+                    {% for publisher in findPublisherByGame %}
+                        {{ publisher.name }}
+                    {% endfor %}
+                {% endif %}
+                </strong></p>
+
+                <p><strong>Date de sortie :</strong> {{ game.publishedAt|date('d/m/Y') }}</p>
+                <p><strong>Plateforme :</strong></p>
+
+                <p><strong>Note :
+                {% if findAverageRatingByGame == 0 %}
+                    <span>Aucune note disponible</span>
+                {% else %}
+                    {# filtre twig game #}
+                    {{ game|get_rating_avg|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale: 'en') }}/5
+                    {# ou filtre extension twig et requete SQL #}
+                    {# {{ findAverageRatingByGame|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale: 'en') }}/5 #}
+                {% endif %}
+                </strong></p>
+
+                <p><strong>Genre :
+                {% if findByGameCategory is empty %}
+                    <span>Aucun genre disponible</span>
+                {% else %}
+                    {% for category in findByGameCategory %}
+                        {{ category.name }}
+                    {% endfor %}
+                {% endif %}
+                </strong></p>
+            </div>
+        </div>
+
+        {# Langues disponibles à droite #}
+        <div class="col-12 col-md-5 col-lg-5 mb-3">
+            <div class="card p-4 h-100 bg-dark opacity-50 text-light">
+                {% if countries is empty %}
+                    <p><strong>Aucune langue différente disponible</strong></p>
+                {% else %}
+                    <p><strong>Langues disponibles :</strong></p>
+                    <ul class="list-unstyled">
+                        {% for country in countries %}
+                            <li class="mb-2">
+                                <strong>{{ country.name }}</strong>
+                                <img src="{{ country.urlFlag }}" alt="{{ country.name }}" class="flag-icon ms-2">
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+    <div class="container">
+        <h2 class="text-center m-4">Avis</h2>
+        {% if findReviewByGame is empty %}
+            <p class="text-center">Aucun avis pour le moment.</p>
+        {% else %}
+            <div class="row">
+               {% for review in findReviewByGame %}
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="review-item bg-dark opacity-75 text-light">
+                            <div class="review-header">
+                                <span class="review-author">{{ review.user.nickname ?? review.user.name }}</span>
+                                <span class="review-date">{{ review.createdAt|date('d/m/Y') }}</span>
+                            </div>
+
+                            {% if review.rating %}
+                                <div class="review-rating">
+                                    <span class="stars">
+                                        {% for i in 1..5 %}
+                                            {% if i <= review.rating %}
+                                                ⭐
+                                            {% else %}
+                                                ☆
+                                            {% endif %}
+                                        {% endfor %}
+                                    </span>
+                                    <span class="rating-value">{{ review.rating }}/5</span>
+                                </div>
+                            {% endif %}
+
+                            <div class="review-content">
+                                <p>{{ review.content|short }}</p>
+                            </div>
+
+                            {# Boutons de vote #}
+                            {% include 'partials/_vote_buttons.html.twig' with {'review': review} %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+{#ajouter un avis#}
+   {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+    <div class="m-4">
+        {#        form#}
+        {{ form_start(formReview) }}
+        {{ form_end(formReview) }}
+    </div>
+    {% endif %}
+
+{% endblock %}

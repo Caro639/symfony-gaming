@@ -1,0 +1,108 @@
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Jeu {{ game.name }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-center m-4">Jeux {{ game.name }}</h1>
+
+    <div class="m-4">
+        <a href="{{ path('app_home') }}" class="default-link">Accueil</a>
+    </div>
+
+    <div class="row align-items-center">
+        <!-- Carte image à gauche -->
+        <div class="col-md-6 mb-2 h-100">
+            <div class="container-img" style="min-height: 385px;">
+                <img src="{{ game.thumbnailCover }}"
+                    alt="{{ game.name }}">
+            </div>
+        </div>
+        <!-- Carte description à droite -->
+        <div class="col-md-6 mb-2 h-100">
+            <div class="card p-4 h-100 bg-dark opacity-50 text-light">
+                <h2>{{ game.name }}</h2>
+                <p>{{ game.description }}</p>
+                <p>Publié le {{ game.publishedAt|date('d/m/Y') }}</p>
+                <h4 class="m-2">{{ game.price }}€</h4>
+                <button class="button-gradient">
+                <a href="#" class="text-decoration-none text-light">Ajouter au panier</a>
+                </button>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="text-center m-4">A propos</h3>
+            <div class="card p-4 bg-dark opacity-50 text-light">
+                <p><strong>Développeur :</strong></p>
+
+{#                <div class="flex-lg-row">#}
+                <p><strong>Éditeur :
+                {% if findPublisherByGame is empty %}
+                    <span>Aucun éditeur disponible</span>
+                {% else %}
+                        {% for publisher in findPublisherByGame %}
+                        {{ publisher.name }}
+                        {% endfor %}
+                    </strong></p>
+                    {% endif %}
+{#                <ul>#}
+{#                    {% for publisher in findPublisherByGame %}#}
+{#                        <li class="list-unstyled"><strong>{{ publisher.name }}</strong></li>#}
+{#                    {% endfor %}#}
+{#                </ul>#}
+{#                </div>#}
+                <p><strong>Date de sortie :</strong> {{ game.publishedAt|date('d/m/Y') }}</p>
+                <p><strong>Plateforme :</strong></p>
+
+                <p><strong>Note :
+                {% if findAverageRatingByGame == 0 %}
+                    <span>Aucune note disponible</span>
+                {% else %}
+                    {{ findAverageRatingByGame|format_number({max_fraction_digit:2, min_fraction_digit:1}, locale: 'en') }}/5
+                    </strong></p>
+                {% endif %}
+
+                <p><strong>Genre :
+                {% if findByGameCategory is empty %}
+                    <span>Aucun genre disponible</span>
+                {% else %}
+                        {% for category in findByGameCategory %}
+                        {{ category.name }}
+                        {% endfor %}
+                    </strong></p>
+                {% endif %}
+{#                <div class="flex-lg-row">#}
+{#                <p><strong>Genre :</strong></p>#}
+{#                <ul>#}
+{#                {% for category in findByGameCategory %}#}
+
+{#                    <li class="list-unstyled"><strong>{{ category.name }}</strong></li>#}
+{#                {% endfor %}#}
+{#                </ul>#}
+{#                </div>#}
+
+                <div class="flex-lg-row">
+                {% if countries is empty %}
+                    <p><strong>Aucune langue différente disponible</strong></p>
+                {% else %}
+                    <p><strong>Langues :</strong></p>
+                <ul>
+                    {% for country in countries %}
+                <li class="list-unstyled"><strong>{{ country.name }}
+                        <img src="{{ country.urlFlag }}" alt="{{ country.name }}" class="flag-icon">
+                    </strong></li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+                </div>
+
+                </div>
+            </div>
+        </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,101 @@
+/* Styles pour les boutons de vote sécurisés */
+
+/* Animations pour les boutons de vote */
+.vote-btn-secure {
+    transition: all 0.2s ease-in-out;
+    position: relative;
+}
+
+.vote-btn-secure:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.vote-btn-secure:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Animation de succès */
+.vote-success {
+    animation: voteSuccessAnimation 0.6s ease-in-out;
+}
+
+@keyframes voteSuccessAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+        background-color: #28a745;
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Animation d'erreur */
+.vote-error {
+    animation: voteErrorAnimation 0.6s ease-in-out;
+}
+
+@keyframes voteErrorAnimation {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+        background-color: #dc3545;
+    }
+    75% {
+        transform: translateX(5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+/* Spinner de chargement */
+.fa-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Styles pour les conteneurs de vote */
+.vote-container-secure {
+    margin: 0.5rem 0;
+}
+
+.vote-display,
+.vote-display-readonly {
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.vote-display-readonly {
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 576px) {
+    .vote-buttons {
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+
+    .vote-btn-secure {
+        width: 100%;
+        justify-content: center;
+    }
+}

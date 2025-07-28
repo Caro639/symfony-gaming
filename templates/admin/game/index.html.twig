@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+{% block title %}Administration des jeux!{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+  <div class="mb-4">
+            <a href="{{ path('app_home') }}" class="default-link">Accueil</a>
+        </div>
+
+    <div class="row">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" class="table-dark">Nom</th>
+                    <th scope="col" class="table-dark">Prix</th>
+                    <th scope="col" class="table-dark">Détail du jeu</th>
+                    <th scope="col" class="table-dark">Ajouter</th>
+                    <th scope="col" class="table-dark">Modifier</th>
+                    <th scope="col" class="table-dark">Supprimer</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for game in games %}
+            {# function filter dernier jeu sorti #}
+            {% set lastGame = get_last_game() %}
+                <tr>
+                    {# <td class="table-secondary">{{ lastGame.name }}</td> #}
+                    <td class="table-secondary">{{ game.name }}</td>
+                     <td class="table-light">{{ game.price|euro }}</td>
+                     <td class="table-secondary">
+                     <a href="{{ path('app_show_game', { slug: game.slug }) }}" class="text-decoration-none text-dark">
+                        Voir le jeu
+                        </a>
+
+                     </td>
+                     <td class="table-light">
+                     <a href="{{ path('app_admin_game_add') }}" class="text-decoration-none text-dark">
+                           Ajouter
+                        </a>
+                     </td>
+                     <td class="button-gradient">
+                     <a href="{{ path('app_admin_game_edit', { id: game.id }) }}" class="text-decoration-none text-dark">
+                           Modifier
+                        </a>
+                     </td>
+                     <td class="table-danger">
+                     <a href="{{ path('app_admin_game_delete', { id: game.id }) }}" class="text-decoration-none text-dark">
+                           Supprimer
+                        </a>
+                     </td>
+                </tr>
+        {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {# display navigation #}
+    <div class="navigation mx-auto">
+        {{ knp_pagination_render(games) }}
+    </div>
+</div>
+{% endblock %}

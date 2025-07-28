@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SteamIsh V3{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="text-center mt-4 mb-4">SteamIsh V3</h1>
+
+
+        {# <div class="row m-4">
+            <div class="col-lg-3">
+                <a href="{{ path('app_category') }}" class="default-link">Ajouter catégorie</a>
+                <a href="{{ path('app_publisher') }}" class="default-link">Ajouter publisher</a>
+            </div>
+        </div> #}
+
+        <div class="row">
+            {% for review in lastReviews %}
+                <div class="col-lg-3">
+                    {{ review.createdAt|date('d/m/Y') }}
+                    {{ review.rating }}/5
+                </div>
+            {% endfor %}
+        </div>
+
+{#        <div class="row">#}
+{#            {% for category in bestCategories %}#}
+{#                <div class="col-lg-3">#}
+{#                    {{ category.name }}#}
+{#                </div>#}
+{#            {% endfor %}#}
+{#        </div>#}
+
+        <div class="row">
+            {% for category in bestPlayCategories %}
+{#                <div class="col-lg-3">#}
+{#                    {{ category.name }}#}
+{#                </div>#}
+                <div class="col-lg-3">
+                    <a href="{{ path('app_game_category', { slug: category.slug }) }}" class="default-link">
+                        {{ category.name }}
+                    </a>
+                </div>
+                {% endfor %}
+        </div>
+
+
+        {% include 'partials/_game_loop.html.twig' with {
+            'title': 'Les dernières sorties',
+            'games': lastGames
+        } %}
+
+        {% include 'partials/_game_loop.html.twig' with {
+            'title': 'Les meilleures offres',
+            'games': expensiveGames
+        } %}
+
+        {% include 'partials/_game_loop.html.twig' with {
+            'title': 'Les tendances actuelles',
+            'games': bestSellers
+        } %}
+        {% include 'partials/_game_loop.html.twig' with {
+            'title': 'Les plus joués',
+            'games': bestTimePlayGames
+        } %}
+
+    </div>
+
+{% endblock %}

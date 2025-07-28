@@ -1,0 +1,77 @@
+<?php
+
+namespace App\Repository;
+
+use App\Entity\Category;
+use App\Entity\Country;
+use App\Entity\Game;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+/**
+ * @extends ServiceEntityRepository<Game>
+ */
+class GameRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Game::class);
+    }
+
+    public function getAll()
+    {
+        return $this->createQueryBuilder('g')
+            ->orderBy('g.id', 'ASC');
+    }
+
+    public function findByBestSeller(int $limit = null): array
+    {
+        // SELECT * FROM game g
+        $qb = $this->createQueryBuilder('g')
+            // JOIN user_own_game oBu ON obu.game_id = g.id
+            ->join('g.ownedByUser', 'oBu')
+            // GROUP BY g.id
+            ->groupBy('g.name')
+            // ORDER BY COUNT(g.id) DESC
+            ->orderBy('COUNT(g.id)', 'DESC')
+            // On ne peut avoir QU'UN SEUL orderBy mais plusieurs addOrderBy
+            ->addOrderBy('g.name', 'ASC');
+
+        if ($limit !== null) {
+            // LIMIT $limit
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findByBestTimePlayGame(int $limit = null): array
+    {
+        $db = $this->createQueryBuilder('g')
+            ->join('g.ownedByUser', 'uOg')
+            ->groupBy('g.name')
+            ->orderBy('SUM(uOg.gameTime)', 'DESC')
+            ->addOrderBy('g.price', 'ASC');
+        if ($limit !== null) {
+            $db->setMaxResults($limit);
+        }
+        return $db->getQuery()->getResult();
+
+    }
+
+    public function findByCategory(Category $category, int $limit = null): array
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->join('g.categories', 'c')
+            ->where('c = :categ')
+            ->setParameter('categ', $category);
+
+        if ($limit !== null) {
+            $qb->setMaxResults($limit);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+
+}
